@@ -1,0 +1,59 @@
+.data
+    gabarito: .space 100
+    respostas: .space 100
+    quebra: .asciiz "\n"
+
+.text
+    main:
+        #ler a quantidade de questões
+        li $v0, 5
+        syscall
+        move $t0, $v0 # $t0 = quantidade
+        
+        move $t1, $zero # $t1 = i, indice para o loop
+
+        #ler gabarito
+        li $v0, 8
+        la $a0, gabarito
+        la $a1, 100
+        syscall
+
+        #ler respostas
+        li $v0, 8
+        la $a0, respostas
+        la $a1, 100
+        syscall
+
+        #declarar nota;
+        li $t5, 0
+        
+        for:
+            slt $t2, $t1, $t0 # i < n?
+            beq $t2, $zero, saida # sair do loop
+
+            lb $t3, gabarito($t1)
+            lb $t4, respostas($t1)
+            beq $t3, $t4, acerto
+
+            addi $t1, $t1, 1
+
+            j for
+
+        acerto:
+            addi $t5, $t5, 1
+            addi $t1, $t1, 1
+            j for
+
+        saida:
+            #printar maior numero digitado
+            li $v0, 1
+            move $a0, $t5
+            syscall
+
+            li $v0, 4
+            la $a0, quebra
+            syscall
+
+            #fechar programa
+            li $v0, 10
+            syscall

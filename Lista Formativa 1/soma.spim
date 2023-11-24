@@ -1,0 +1,49 @@
+.data
+    prompt:     .asciiz "Digite o primeiro número: "
+    prompt2:    .asciiz "Digite o segundo número: "
+    result:     .asciiz "O resultado da soma é: "
+    newline:    .asciiz "\n"
+
+.text
+    main:
+        # Imprimir o primeiro prompt
+        li $v0, 4
+        la $a0, prompt
+        syscall
+
+        # Ler o primeiro número
+        li $v0, 5
+        syscall
+        move $t0, $v0
+
+        # Imprimir o segundo prompt
+        li $v0, 4
+        la $a0, prompt2
+        syscall
+
+        # Ler o segundo número
+        li $v0, 5
+        syscall
+        move $t1, $v0
+
+        # Somar os números
+        add $t2, $t0, $t1
+
+        # Imprimir o resultado
+        li $v0, 4
+        la $a0, result
+        syscall
+
+        # Imprimir o valor da soma
+        li $v0, 1
+        move $a0, $t2
+        syscall
+
+        # Quebra de Linha
+        li $v0, 4
+        la $a0, newline
+        syscall
+
+        # Sair do programa
+        li $v0, 10
+        syscall

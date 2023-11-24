@@ -1,0 +1,171 @@
+.data
+    teste: .asciiz "Teste "
+    space: .asciiz " "
+    vetor: .word 126
+
+.text
+main:
+
+# cópia do endereço do meu vetor em $s0
+la $s0, vetor
+
+# salva meu teste em s1
+li $s1, 1
+
+loop1:
+    jal numero
+    # A e V em s2 e s3
+    move $s2, $v0
+    move $s3, $v1
+
+    or $t0, $s2, $s3
+    beq $t0, $zero, outLoop1
+
+    li $s4, 0
+
+    loop2:
+        beq $s3, $zero, outLoop2
+        addi $s3, $s3, -1
+
+        jal numero
+
+        sll $v0, $v0, 2
+        sll $v1, $v1, 2
+
+        add $v0, $v0, $s0
+        add $v1, $v1, $s0
+
+        lw $t0, 0($v0)
+        lw $t1, 0($v1)
+
+        addi $t0, $t0, 1
+        addi $t1, $t1, 1
+
+        sw $t0, 0($v0)
+        sw $t1, 0($v1)
+
+        bge $t0, $t1, maximo 
+        move $t3, $t1
+        j fimMaximo
+
+    maximo:
+        move $t3, $t0
+    
+    fimMaximo:
+        bge $t3, $s4, novoMaximo
+
+        j fimNovoMaximo
+
+    novoMaximo:
+        move $s4, $t3
+
+    fimNovoMaximo:
+        j loop2
+    
+    outLoop2:
+        la $a0, teste
+        li $v0, 4
+        syscall
+
+        move $a0, $s1
+        li $v0, 1
+        syscall
+
+        li $v0, 11
+        li $a0, 10
+        syscall
+
+        la $a0, vetor
+        move $a1, $s4
+        move $a3, $s2
+        
+        jal iguais
+
+        li $v0, 11
+        li $a0, 10
+        syscall
+
+        li $v0, 11
+        li $a0, 10
+        syscall
+
+        addi $s1, $s1, 1
+        li $s4, 0
+
+        j loop1
+
+outLoop1:
+    li $v0, 10
+    syscall
+
+iguais:
+    li $t0, 1
+    move $t6, $a0
+
+    loopIgual:
+        slt $t1, $a3, $t0
+        bne $t1, $zero, fimLoopIgual
+
+        sll $t2, $t0, 2
+        add $t2, $t2, $t6
+
+        lw $t3, 0($t2)
+
+        beq $t3, $a1, print
+
+        j fimPrint
+
+        print:
+            move $a0, $t0
+            li $v0, 1
+            syscall
+
+            la $a0, space
+            li $v0, 4
+            syscall
+
+        fimPrint:
+            sw $zero, 0($t2)
+            addi $t0, $t0, 1
+
+            j loopIgual
+
+    fimLoopIgual:
+        jr $ra
+
+numero:
+    move $t0, $zero
+    move $t1, $zero
+
+    loop4:
+        li $v0, 12
+        syscall
+
+        addi $v0, $v0, -48
+        slt $t3, $v0, $zero
+        bne $t3, $zero, fimLoop4
+
+        mul $t0, $t0, 10
+        add $t0, $t0, $v0
+
+        j loop4
+
+        fimLoop4:
+
+        loop5:
+            li $v0, 12
+            syscall
+
+            addi $v0, $v0, -48
+            slt $t3, $v0, $zero
+            bne $t3, $zero, out
+
+            mul $t1, $t1, 10
+            add $t1, $t1, $v0
+
+            j loop5
+
+        out:
+            move $v0, $t0
+            move $v1, $t1
+            jr $ra

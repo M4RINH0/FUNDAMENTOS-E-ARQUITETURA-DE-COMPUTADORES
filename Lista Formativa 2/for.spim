@@ -1,0 +1,15 @@
+.text
+    
+    move $t0, $zero #dando ao t0 valor 0 para ser o indice
+    
+    for:
+        slt $t2, $t0, $t1 #considerando t1 = h
+        beq $t2, $zero, saida #sair do loop caso i < h
+
+        add	$t3, $t3, $t4 # $t3 = f, $t4 = g // f = f + g
+
+        j for
+    saida:
+        li $v0, 10
+        syscall    
+        

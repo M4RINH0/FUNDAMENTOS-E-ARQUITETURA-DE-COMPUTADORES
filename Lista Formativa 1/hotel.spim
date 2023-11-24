@@ -1,0 +1,39 @@
+.data
+    barra: .asciiz "\n"
+.text
+    main:
+
+    li $v0, 5 # D, diaria
+    syscall
+    move $t0, $v0
+
+    li $v0, 5 # A, aumento da diaria
+    syscall
+    move $t1, $v0
+
+    li $v0, 5 # N, dia da chegada
+    syscall
+    move $t2, $v0
+
+    li $t3, 1
+
+    sub $s0, $t2, $t3
+
+    mul $s1, $s0, $t1
+
+    add $s2, $t0, $s1
+
+    li $t5, 31
+
+    sub $t6, $t5, $s0
+
+    mul $a0, $t6, $s2
+    li $v0, 1
+    syscall
+
+    li $v0, 4
+    la $a0, barra
+    syscall
+
+    li $v0, 10
+    syscall

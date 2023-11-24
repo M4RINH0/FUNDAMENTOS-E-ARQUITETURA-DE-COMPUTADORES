@@ -1,0 +1,17 @@
+contaBits:
+    # Inicializar variáveis
+    li $t0, 0 # count = 0
+    li $t2, 1 # mascara = 1
+
+conta_loop:
+    beq $a0, $zero, end_conta # Se num for 0, finaliza o loop
+
+    and $t1, $a0, $t2 # $t1 = num & 1
+    add $t0, $t0, $t1 # count += $t1
+
+    srl $a0, $a0, 1 # num >>= 1
+    j conta_loop
+
+end_conta:
+    move $v0, $t0 # Retorna count em $v0
+    jr $ra # Retorna para o endereço de retorno

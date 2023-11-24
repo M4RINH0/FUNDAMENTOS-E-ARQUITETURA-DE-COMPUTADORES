@@ -1,0 +1,31 @@
+    li $v0, 5 #lendo valor de 'i'
+    syscall
+    move $t0, $v0
+
+    li $v0, 5 #lendo valor de 'j' 5
+    syscall
+    move $t1, $v0
+
+    li $v0, 5 #lendo valor de 'n' 5
+    syscall
+    move $t2, $v0
+
+    li $t3, 4
+    # relacionado a I
+    mul $t0, $t0, $t3
+    #sll $t0, $t0, 4
+    add $t0, $t0, $s0
+
+    # relacionado a J
+    mul $t1, $t1, $t3
+    #sll $t1, $t1, 4
+    add $t1, $t1, $s0
+
+    #A[j]
+    lw $t4, ($t1)
+
+    #A[j] + N
+    add $t4, $t4, $t2
+
+    #A[i] = A[j] + N
+    sw $t4, ($t0)

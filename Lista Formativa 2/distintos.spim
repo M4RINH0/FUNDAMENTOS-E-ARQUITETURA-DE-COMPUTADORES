@@ -1,0 +1,28 @@
+elemDistintos:
+    li   $v0, 1         # Inicializa o contador de elementos distintos para 1
+    lw   $t0, 0($a0)     # Inicializa $t0 com o valor do primeiro elemento do vetor
+    move $t1, $zero      # Inicializa o índice i (contador) para zero
+    addi $a1, $a1, -1
+    add $a0, $a0, 4
+
+loop:
+    bge  $t1, $a1, saida # Se i >= quantidade de elementos no vetor, sair do loop
+
+    lw   $t2, 0($a0)     # Carrega o elemento atual do vetor
+
+    bne  $t2, $t0, conta # Se o elemento atual é diferente do elemento anterior, vai para a rotina de contagem
+
+    addi $a0, $a0, 4     # Incrementa o endereço do vetor para apontar para o próximo elemento
+    addi $t1, $t1, 1     # Incrementa o índice i
+    j loop               # Volta para o início do loop
+
+conta:
+    addi $v0, $v0, 1     # Incrementa o contador de elementos distintos
+    move $t0, $t2        # Atualiza $t0 com o valor do elemento atual
+
+    addi $a0, $a0, 4     # Incrementa o endereço do vetor para apontar para o próximo elemento
+    addi $t1, $t1, 1     # Incrementa o índice i
+    j loop               # Volta para o início do loop
+
+saida:
+    jr $ra               # Retorna da função

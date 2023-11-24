@@ -1,0 +1,50 @@
+.data
+    quebra: .asciiz "\n"
+
+.text
+    main:
+        #ler a quantidade de numeros
+        enquanto:
+            li $v0, 5
+            syscall
+            move $t0, $v0
+            
+            ble	$t0, $zero, enquanto
+            
+
+        
+        li $t3, -2147483647 #criando variavel maior com valor 0
+        move $t1, $zero # Indice para loop começando em 0
+
+        loop:
+            slt $t2, $t1, $t0 #i< n?
+            beq $t2, $zero, saida #sair do loop
+
+            #ler valor 
+            li $v0, 5
+            syscall
+            move $t4, $v0
+
+            bgt	$t4, $t3, maior	# if vetor($t1) > $t3 then target
+            
+            addi $t1, $t1, 1    
+            j loop
+
+        maior:
+            move $t3, $t4
+            addi $t1, $t1, 1
+            j loop
+
+        saida:
+            #printar maior numero digitado
+            li $v0, 1
+            move $a0, $t3
+            syscall
+
+            li $v0, 4
+            la $a0, quebra
+            syscall
+
+            #fechar programa
+            li $v0, 10
+            syscall
